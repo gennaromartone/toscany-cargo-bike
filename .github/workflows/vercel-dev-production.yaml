@@ -1,0 +1,63 @@
+name: dev-production-deploy
+on:
+  pull_request:
+    branches:
+      - develop
+jobs:
+  build-and-deploy-project:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+      - name: Install
+        run: npm install
+      - name: Build
+        run: npm run build
+#      - name: Archive Build Artifact
+#        uses: actions/upload-artifact@v2
+#        with:
+#          name: buildDir
+#          retention-days: 1
+#          path: |
+#            build/*
+#            vercelConfigs/*
+#  deploy-project:
+#    needs: build-project -> fix dependency job name
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Download build artifact
+#        uses: actions/download-artifact@v2
+#        with:
+#          name: buildDir
+      - name: Vercel Deploy
+        id: vercel-deploy
+        run: |
+          deployUrl=$(npx vercel --local-config ./vercelConfigs/vercel.json --token $TOKEN)
+          echo "::set-output name=deploy_url::$deployUrl"
+        env:
+          TOKEN: ${{ secrets.VERCEL_SECRET }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      # - name: Deploy to Staging 
+      #   id: deploy-vercel-staging
+      #   uses: amondnet/vercel-action@v20
+      #   with:
+      #     vercel-token: ${{ secrets.VERCEL_SECRET }}
+      #     vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+      #     vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID_TL_ENGINE }}
+      #     scope: ${{ secrets.VERCEL_ORG_ID }} 
+      - name: Send Slack Message
+        uses: rtCamp/action-slack-notify@v2.0.2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_CHANNEL: deploy-project
+          SLACK_TITLE: NEW DEV PRODUCTION SITE AVAILABLE
+          SLACK_MESSAGE: |
+            The branch **develop** has ben upgraded with success follow the next link to see new changes.
+
+
+            A new DEV PRODUCTION SITE is available at ${{ steps.vercel-deploy.outputs.deploy_url }}
+
+
