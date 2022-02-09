@@ -37,8 +37,8 @@ jobs:
           echo "::set-output name=pullrequest_url::${{ github.event.pull_request.html_url }}"
         env:
           TOKEN: ${{ secrets.VERCEL_SECRET }}
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_TEST_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_TEST_PROJECT_ID }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
       - name: Send Slack Message
         uses: rtCamp/action-slack-notify@v2.0.2
         env:
