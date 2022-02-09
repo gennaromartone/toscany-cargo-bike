@@ -1,0 +1,14 @@
+{
+    "github": {
+      "enabled": false,
+      "silent": true
+    },
+    "routes": [
+      {
+        "src": "/(.*)",
+        "headers": { "X-Robots-Tag": "noindex" },
+        "continue": true
+      }
+    ],
+    "regions": ["cdg1"]
+}
