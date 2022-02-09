@@ -32,7 +32,7 @@ jobs:
       - name: Vercel Deploy
         id: vercel-deploy
         run: |
-          deployUrl=$(npx vercel --local-config ./vercelConfigs/vercel.dev.json --token $TOKEN)
+          deployUrl=$(npx vercel --local-config ./vercelConfigs/vercel.json --token $TOKEN)
           echo "::set-output name=deploy_url::$deployUrl"
           echo "::set-output name=pullrequest_url::${{ github.event.pull_request.html_url }}"
         env:
